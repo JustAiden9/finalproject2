@@ -8,26 +8,20 @@
 import SwiftUI
 
 struct NavbarView: View {
+    var onAddTapped: () -> Void
     var body: some View {
         HStack(spacing: 16) {
-            
-            // Main toolbar group
             HStack(spacing: 28) {
-                
                 ToolbarItem(icon: "chart.bar.fill", title: "Stats")
                 ToolbarItem(icon: "arrow.down.doc.fill", title: "Export")
                 ToolbarItem(icon: "rectangle.grid.2x2.fill", title: "Menu")
-                
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 14)
             .background(Color.gray.opacity(0.5))
             .clipShape(Capsule())
             
-            // Separated plus button
-            Button {
-                // Add action
-            } label: {
+            Button { onAddTapped() } label: {
                 VStack(spacing: 4) {
                     Image(systemName: "plus")
                         .font(.system(size: 22, weight: .bold))
@@ -65,7 +59,6 @@ struct ToolbarItem: View {
 
 #Preview {
     ZStack {
-       
-        NavbarView()
+        NavbarView(onAddTapped: {})
     }
 }
