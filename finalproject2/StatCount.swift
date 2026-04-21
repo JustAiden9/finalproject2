@@ -31,3 +31,7 @@ class BasketballStats {
         self.fieldGoalPercentage = fieldGoalPercentage
     }
 }
+
+struct Player {
+    var stats: BasketballStats
+}
