@@ -1,3 +1,10 @@
+//
+//  PlayerView.swift
+//  finalproject2
+//
+//  Created by Parker Engelson on 4/21/26.
+//
+
 import SwiftUI
 
 struct PlayerView: View {

@@ -21,7 +21,7 @@ struct NavbarView: View {
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 14)
-            .background(Color.white.opacity(0.1))
+            .background(Color.gray.opacity(0.5))
             .clipShape(Capsule())
             
             // Separated plus button
@@ -34,7 +34,7 @@ struct NavbarView: View {
                 }
                 .foregroundColor(.black)
                 .frame(width: 60, height: 60)
-                .background(Color.white)
+                .background(Color.orange)
                 .clipShape(Circle())
             }
         }
@@ -58,14 +58,14 @@ struct ToolbarItem: View {
                 Text(title)
                     .font(.caption2)
             }
-            .foregroundColor(.white)
+            .foregroundColor(.black)
         }
     }
 }
 
 #Preview {
     ZStack {
-        Color.black.ignoresSafeArea() // so white UI pops
+       
         NavbarView()
     }
 }
