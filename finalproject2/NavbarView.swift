@@ -9,10 +9,63 @@ import SwiftUI
 
 struct NavbarView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        HStack(spacing: 16) {
+            
+            // Main toolbar group
+            HStack(spacing: 28) {
+                
+                ToolbarItem(icon: "chart.bar.fill", title: "Stats")
+                ToolbarItem(icon: "arrow.down.doc.fill", title: "Export")
+                ToolbarItem(icon: "rectangle.grid.2x2.fill", title: "Menu")
+                
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 14)
+            .background(Color.white.opacity(0.1))
+            .clipShape(Capsule())
+            
+            // Separated plus button
+            Button {
+                // Add action
+            } label: {
+                VStack(spacing: 4) {
+                    Image(systemName: "plus")
+                        .font(.system(size: 22, weight: .bold))
+                }
+                .foregroundColor(.black)
+                .frame(width: 60, height: 60)
+                .background(Color.white)
+                .clipShape(Circle())
+            }
+        }
+        .padding()
+    }
+}
+
+// Reusable toolbar item
+struct ToolbarItem: View {
+    let icon: String
+    let title: String
+    
+    var body: some View {
+        Button {
+            // Action here
+        } label: {
+            VStack(spacing: 6) {
+                Image(systemName: icon)
+                    .font(.system(size: 20))
+                
+                Text(title)
+                    .font(.caption2)
+            }
+            .foregroundColor(.white)
+        }
     }
 }
 
 #Preview {
-    NavbarView()
+    ZStack {
+        Color.black.ignoresSafeArea() // so white UI pops
+        NavbarView()
+    }
 }
