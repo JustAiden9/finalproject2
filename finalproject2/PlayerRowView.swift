@@ -16,7 +16,7 @@ struct PlayerRowView: View {
                 Circle()
                     .fill(Color.orange.opacity(0.15))
                     .frame(width: 46, height: 46)
-                Text(String(player.stats.playerName.prefix(1)).uppercased()) // allows us to show the first letter of teh users name in the pfp (we want to add real pfp soon)
+                Text(String(player.stats.playerName.prefix(1)).uppercased()) // allows us to show the first letter of the users name in the pfp (we want to add real pfp soon)
                     .font(.title3)
                     .fontWeight(.bold)
                     .foregroundColor(.orange)
