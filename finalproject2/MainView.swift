@@ -10,6 +10,7 @@ import SwiftUI
 struct MainView: View {
     @State private var players: [Player] = []
     @State private var showingAddPlayer = false
+    @State private var showingSettings = false
 
     var body: some View {
         ZStack(alignment: .bottom) {
