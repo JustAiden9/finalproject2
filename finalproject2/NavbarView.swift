@@ -18,7 +18,7 @@ struct NavbarView: View {
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 14)
-            .background(Color.gray.opacity(0.5))
+            .background(Color.black)
             .clipShape(Capsule())
             
             Button { onAddTapped() } label: {
@@ -52,7 +52,7 @@ struct ToolbarItem: View {
                 Text(title)
                     .font(.caption2)
             }
-            .foregroundColor(.black)
+            .foregroundColor(.white)
         }
     }
 }
