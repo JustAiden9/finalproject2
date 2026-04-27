@@ -21,6 +21,7 @@ struct PlayerView: View {
     
     var player: Player
 
+    // this ensures that when the screen loads, the numbers you see on your screen match the actual data for that player.
     init(player: Player) {
         self.player = player
         _points = State(initialValue: player.stats.points)
@@ -86,7 +87,7 @@ struct PlayerView: View {
         .padding()
     }
 
-    // This helper function tells the Picker which @State variable to move
+    // this asks, Which stat is the user currently looking at, If you've selected "REB", it connects the wheel to the rebounds variable.
     private func binding(for stat: String) -> Binding<Int> {
         switch stat {
         case "Points": return $points
@@ -101,6 +102,8 @@ struct PlayerView: View {
     }
 }
 
+
+// Instead of writing the code for a little square box seven different times, we just just condense it all down into one. we call each stat one by one in one function.
 struct StatBox: View {
     var title: String
     var value: Int
