@@ -15,6 +15,7 @@ struct NavbarView: View {
                 ToolbarItem(icon: "chart.bar.fill", title: "Stats")
                 ToolbarItem(icon: "arrow.down.doc.fill", title: "Export")
                 ToolbarItem(icon: "rectangle.grid.2x2.fill", title: "Menu")
+                ToolbarItem(icon: "gear", title: "Settings")
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 14)

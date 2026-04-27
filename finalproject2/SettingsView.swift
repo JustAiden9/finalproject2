@@ -15,11 +15,13 @@ struct SettingsView: View {
             Form {
                 Section(header: Text("Appearance")) {
                     
-                    Picker("Theme", selection: $isDarkMode) {
-                        Text("Outdoor (Light)").tag(false)
-                        Text("Indoor (Dark)").tag(true)
+                    Toggle(isOn: $isDarkMode){
+                        HStack{
+                            Image(systemName: isDarkMode ? "moon.fill" : "sun.max.fill")
+                            Text(isDarkMode ? "Indoor (Dark Mode)" : "Outdoor (Light Mode)")
+                        }
                     }
-                    .pickerStyle(SegmentedPickerStyle())
+                    
                 }
             }
             .navigationTitle("Settings")
