@@ -20,10 +20,13 @@ struct PlayerView: View {
     @State private var selectedStat: String = "Points"
     
     var player: Player
+    // callback so MainView can receive the updated player and persist it
+    var onSave: (Player) -> Void
 
     // this ensures that when the screen loads, the numbers you see on your screen match the actual data for that player.
-    init(player: Player) {
+    init(player: Player, onSave: @escaping (Player) -> Void) {
         self.player = player
+        self.onSave = onSave // store the callback
         _points = State(initialValue: player.stats.points)
         _shots = State(initialValue: player.stats.shots)
         _rebounds = State(initialValue: player.stats.rebounds)
@@ -82,6 +85,25 @@ struct PlayerView: View {
                 }
             }
 
+            //save button: writes local state back to the player and fires the callback
+            Button("Save Stats") {
+                player.stats.points = points
+                player.stats.shots = shots
+                player.stats.rebounds = rebounds
+                player.stats.assists = assists
+                player.stats.steals = steals
+                player.stats.blocks = blocks
+                player.stats.fouls = fouls
+                onSave(player)
+            }
+            .font(.headline)
+            .foregroundColor(.white)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 14)
+            .background(Color.orange)
+            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .padding(.horizontal)
+
             Spacer()
         }
         .padding()
@@ -136,5 +158,5 @@ struct StatBox: View {
         blocks: 1,
         fouls: 3,
         fieldGoalPercentage: 0.53
-    )))
+    )), onSave: { _ in }) // MARK: - Dummy closure for preview
 }

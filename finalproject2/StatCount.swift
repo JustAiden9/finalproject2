@@ -6,8 +6,10 @@
 //
 
 import SwiftUI
+import Combine
 
-class BasketballStats {
+// changed class to struct and added Codable so stats can be saved to UserDefaults
+struct BasketballStats: Codable {
     var playerName: String
     var shots: Int
     var points: Int
@@ -32,6 +34,33 @@ class BasketballStats {
     }
 }
 
-struct Player {
-    var stats: BasketballStats
+// made Player an ObservableObject with Identifiable (This object has a unique ID) + Codable (save player + reload after app refresh) so it can be persisted and observed
+class Player: ObservableObject, Identifiable, Codable {
+    let id: UUID
+    @Published var stats: BasketballStats
+
+    init(stats: BasketballStats) {
+        self.id = UUID()
+        self.stats = stats
+    }
+    
+    // We manually implement Codable because @Published properties don’t automatically work with it
+    //
+    // CodingKeys tells Swift which properties we want to save/load
+    // in my case, we only care about "id" and "stats"
+    enum CodingKeys: String, CodingKey { case id, stats }
+    // This initializer is used when we are LOADING (decoding) a Player from saved data
+    required init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(UUID.self, forKey: .id)
+        stats = try c.decode(BasketballStats.self, forKey: .stats)
+    }
+    // This function is used when we are SAVING (encoding) a Player to data
+    func encode(to encoder: Encoder) throws {
+        var c = encoder.container(keyedBy: CodingKeys.self)
+        // Encode each property into the container
+        try c.encode(id, forKey: .id)
+        try c.encode(stats, forKey: .stats)
+    }
 }
+
