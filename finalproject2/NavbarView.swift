@@ -9,47 +9,45 @@ import SwiftUI
 
 struct NavbarView: View {
     var onAddTapped: () -> Void
+    var onStatsTapped: () -> Void
+    var onExportTapped: () -> Void
+    var onSettingsTapped: () -> Void
+
     var body: some View {
         HStack(spacing: 16) {
             HStack(spacing: 28) {
-                ToolbarItem(icon: "chart.bar.fill", title: "Stats")
-                ToolbarItem(icon: "arrow.down.doc.fill", title: "Export")
-                ToolbarItem(icon: "rectangle.grid.2x2.fill", title: "Menu")
-                ToolbarItem(icon: "gear", title: "Settings")
+                ToolbarItem(icon: "chart.bar.fill", title: "Stats",    action: onStatsTapped)
+                ToolbarItem(icon: "arrow.down.doc.fill", title: "Export",  action: onExportTapped)
+                ToolbarItem(icon: "gear",               title: "Settings", action: onSettingsTapped)
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 14)
             .background(Color.black)
             .clipShape(Capsule())
-            
+
             Button { onAddTapped() } label: {
-                VStack(spacing: 4) {
-                    Image(systemName: "plus")
-                        .font(.system(size: 22, weight: .bold))
-                }
-                .foregroundColor(.black)
-                .frame(width: 60, height: 60)
-                .background(Color.orange)
-                .clipShape(Circle())
+                Image(systemName: "plus")
+                    .font(.system(size: 22, weight: .bold))
+                    .foregroundColor(.black)
+                    .frame(width: 60, height: 60)
+                    .background(Color.orange)
+                    .clipShape(Circle())
             }
         }
         .padding()
     }
 }
 
-// Reusable toolbar item
 struct ToolbarItem: View {
     let icon: String
     let title: String
-    
+    let action: () -> Void
+
     var body: some View {
-        Button {
-            // Action here
-        } label: {
+        Button(action: action) {
             VStack(spacing: 6) {
                 Image(systemName: icon)
                     .font(.system(size: 20))
-                
                 Text(title)
                     .font(.caption2)
             }
@@ -59,7 +57,5 @@ struct ToolbarItem: View {
 }
 
 #Preview {
-    ZStack {
-        NavbarView(onAddTapped: {})
-    }
+    NavbarView(onAddTapped: {}, onStatsTapped: {}, onExportTapped: {}, onSettingsTapped: {})
 }

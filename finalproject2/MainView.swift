@@ -10,7 +10,8 @@ import SwiftUI
 struct MainView: View {
     @State private var players: [Player] = MainView.loadPlayers()
     @State private var showingAddPlayer = false
-    @State private var showingSettings = false
+    @State private var showingExport    = false
+    @State private var showingSettings  = false
     
     var body: some View {
         NavigationStack {
@@ -60,23 +61,34 @@ struct MainView: View {
                 }
                 
                 // Navbar pinned to bottom
-                NavbarView(onAddTapped: { showingAddPlayer = true })
-            }
+                NavbarView(
+                     onAddTapped:      { showingAddPlayer = true },
+                     onStatsTapped:    { /* already on MainView, nothing to do */ },
+                     onExportTapped:   { showingExport    = true },
+                     onSettingsTapped: { showingSettings  = true }
+                 )
+             }
             
             // when the user saves, the new Player is handed back here and then to the
             // players array, which triggers the list to re-render with the new entry.
-            .sheet(isPresented: $showingAddPlayer) {
-                AddPlayerView { newPlayer in
-                    players.append(newPlayer)
-                    savePlayers() // persist immediately when a new player is added
-                }
-            }
+             .sheet(isPresented: $showingAddPlayer) {
+                 AddPlayerView { newPlayer in
+                     players.append(newPlayer)
+                     savePlayers() // persist immediately when a new player is added
+                 }
+             }
+             .sheet(isPresented: $showingExport) {
+                 ExportView()
+             }
+             .sheet(isPresented: $showingSettings) {
+                 SettingsView()
+             }
             // Also save when the player count changes
-            .onChange(of: players.count) { newValue, oldValue in
-                savePlayers()
-            }
-        }
-    }
+             .onChange(of: players.count) { _, _ in
+                 savePlayers()
+             }
+         }
+     }
     
     // encode the players array to JSON and write to UserDefaults
     func savePlayers() {

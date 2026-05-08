@@ -50,7 +50,7 @@ class Player: ObservableObject, Identifiable, Codable {
     // in my case, we only care about "id" and "stats"
     enum CodingKeys: String, CodingKey { case id, stats }
     // This initializer is used when we are LOADING (decoding) a Player from saved data
-    required init(from decoder: Decoder) throws {
+    required init(from decoder: Decoder) throws { // This is the "loading" function.
         let c = try decoder.container(keyedBy: CodingKeys.self)
         id = try c.decode(UUID.self, forKey: .id)
         stats = try c.decode(BasketballStats.self, forKey: .stats)
