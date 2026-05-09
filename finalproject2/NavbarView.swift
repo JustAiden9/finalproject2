@@ -18,7 +18,7 @@ struct NavbarView: View {
             HStack(spacing: 28) {
                 ToolbarItem(icon: "chart.bar.fill", title: "Stats",    action: onStatsTapped)
                 ToolbarItem(icon: "arrow.down.doc.fill", title: "Export",  action: onExportTapped)
-                ToolbarItem(icon: "gear",               title: "Settings", action: onSettingsTapped)
+                ToolbarItem(icon: "gear",title: "Settings", action: onSettingsTapped)
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 14)

@@ -69,19 +69,19 @@ struct PlayerView: View {
                 }
                 
                 HStack(spacing: 25) {
-                    StatBox(title: "REB", value: rebounds, isSelected: selectedStat == "REB")
-                        .onTapGesture { selectedStat = "REB" }
-                    StatBox(title: "AST", value: assists, isSelected: selectedStat == "AST")
-                        .onTapGesture { selectedStat = "AST" }
-                    StatBox(title: "STL", value: steals, isSelected: selectedStat == "STL")
-                        .onTapGesture { selectedStat = "STL" }
+                    StatBox(title: "Rebounds", value: rebounds, isSelected: selectedStat == "Rebounds")
+                        .onTapGesture { selectedStat = "Rebounds" }
+                    StatBox(title: "Assists", value: assists, isSelected: selectedStat == "Assists")
+                        .onTapGesture { selectedStat = "Assists" }
+                    StatBox(title: "Steals", value: steals, isSelected: selectedStat == "Steals")
+                        .onTapGesture { selectedStat = "Steals" }
                 }
                 
                 HStack(spacing: 25) {
-                    StatBox(title: "BLK", value: blocks, isSelected: selectedStat == "BLK")
-                        .onTapGesture { selectedStat = "BLK" }
-                    StatBox(title: "FLS", value: fouls, isSelected: selectedStat == "FLS")
-                        .onTapGesture { selectedStat = "FLS" }
+                    StatBox(title: "Blocks", value: blocks, isSelected: selectedStat == "Blocks")
+                        .onTapGesture { selectedStat = "Blocks" }
+                    StatBox(title: "Fouls", value: fouls, isSelected: selectedStat == "Fouls")
+                        .onTapGesture { selectedStat = "Fouls" }
                 }
             }
 
@@ -114,11 +114,11 @@ struct PlayerView: View {
         switch stat {
         case "Points": return $points
         case "Shots": return $shots
-        case "REB": return $rebounds
-        case "AST": return $assists
-        case "STL": return $steals
-        case "BLK": return $blocks
-        case "FLS": return $fouls
+        case "Rebounds": return $rebounds
+        case "Assists": return $assists
+        case "Steals": return $steals
+        case "Blocks": return $blocks
+        case "Fouls": return $fouls
         default: return $points
         }
     }
