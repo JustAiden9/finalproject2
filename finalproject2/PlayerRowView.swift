@@ -26,7 +26,7 @@ struct PlayerRowView: View {
                 Text(player.stats.playerName)
                     .font(.headline)
                     .foregroundColor(.primary)
-                Text("\(player.stats.points) pts · \(player.stats.rebounds) reb · \(player.stats.assists) ast")
+                Text("\(player.stats.points) points · \(player.stats.rebounds) rebounds · \(player.stats.assists) assists")
                     .font(.caption)
                     .foregroundColor(.gray)
             }
