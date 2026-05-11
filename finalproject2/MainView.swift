@@ -21,7 +21,7 @@ struct MainView: View {
                 VStack() {
                     // Header
                     HStack {
-                        Text("Game Stats")
+                        Text("Swish Stats")
                             .font(.largeTitle)
                             .fontWeight(.bold)
                         Spacer()
