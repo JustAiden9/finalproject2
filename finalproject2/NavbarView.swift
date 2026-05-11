@@ -16,9 +16,9 @@ struct NavbarView: View {
     var body: some View {
         HStack(spacing: 16) {
             HStack(spacing: 28) {
-                ToolbarItem(icon: "chart.bar.fill", title: "Stats",    action: onStatsTapped)
+                ToolbarItem(icon: "chart.bar.fill", title: "Help",    action: onStatsTapped)
                 ToolbarItem(icon: "arrow.down.doc.fill", title: "Export",  action: onExportTapped)
-                ToolbarItem(icon: "gear",               title: "Settings", action: onSettingsTapped)
+                ToolbarItem(icon: "gear", title: "Settings", action: onSettingsTapped)
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 14)

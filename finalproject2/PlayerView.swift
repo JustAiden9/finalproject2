@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct PlayerView: View {
+    // all the vars for the stats
     @State private var points: Int
     @State private var shots: Int
     @State private var rebounds: Int
@@ -15,85 +16,78 @@ struct PlayerView: View {
     @State private var steals: Int
     @State private var blocks: Int
     @State private var fouls: Int
-    
-    // Track which stat we are currently editing with the wheel
-    @State private var selectedStat: String = "Points"
-    
+
+    // Undo stack, each entry is a snapshot of all stats before a tap
+    @State private var undoStack: [(points: Int, shots: Int, rebounds: Int, assists: Int, steals: Int, blocks: Int, fouls: Int)] = []
+
     var player: Player
-    // callback so MainView can receive the updated player and persist it
     var onSave: (Player) -> Void
 
-    // this ensures that when the screen loads, the numbers you see on your screen match the actual data for that player.
+    // use this to set up our @State with the existing stats from the (player) object.
     init(player: Player, onSave: @escaping (Player) -> Void) {
         self.player = player
-        self.onSave = onSave // store the callback
-        _points = State(initialValue: player.stats.points)
-        _shots = State(initialValue: player.stats.shots)
+        self.onSave = onSave
+        // Use _ to access the State storage and set the starting value so the last used value after app closure.
+        _points   = State(initialValue: player.stats.points)
+        _shots    = State(initialValue: player.stats.shots)
         _rebounds = State(initialValue: player.stats.rebounds)
-        _assists = State(initialValue: player.stats.assists)
-        _steals = State(initialValue: player.stats.steals)
-        _blocks = State(initialValue: player.stats.blocks)
-        _fouls = State(initialValue: player.stats.fouls)
+        _assists  = State(initialValue: player.stats.assists)
+        _steals   = State(initialValue: player.stats.steals)
+        _blocks   = State(initialValue: player.stats.blocks)
+        _fouls    = State(initialValue: player.stats.fouls)
     }
 
     var body: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: 24) {
+            // Player name
             Text(player.stats.playerName)
                 .font(.largeTitle)
                 .fontWeight(.bold)
 
-            // The Active Wheel Section
-            // This changes dynamically based on what you tap below
-            VStack {
-                Picker(selectedStat, selection: binding(for: selectedStat)) {
-                    ForEach(0..<101) { number in
-                        Text("\(number)").tag(number)
-                    }
+            // Stat grid
+            VStack(spacing: 16) {
+                HStack(spacing: 16) {
+                    StatTapBox(title: "Points",   value: points)   { increment(&points) } // It runs when the box is tapped sends the data to our stats above to change the number.
+                    StatTapBox(title: "Shots",    value: shots)    { increment(&shots) }
                 }
-                .pickerStyle(.wheel)
-                .frame(height: 150)
+                HStack(spacing: 16) {
+                    StatTapBox(title: "Rebounds", value: rebounds) { increment(&rebounds) }
+                    StatTapBox(title: "Assists",  value: assists)  { increment(&assists) }
+                }
+                HStack(spacing: 16) {
+                    StatTapBox(title: "Steals",   value: steals)   { increment(&steals) }
+                    StatTapBox(title: "Blocks",   value: blocks)   { increment(&blocks) }
+                }
+                HStack(spacing: 16) {
+                    StatTapBox(title: "Fouls",    value: fouls)    { increment(&fouls) }
+                }
             }
-            .background(Color(.systemGray6))
-            .cornerRadius(15)
+            .padding(.horizontal)
 
-            Divider()
-
-            // Interactive Stat Grid
-            // Tapping these updates the 'selectedStat' which switches the wheel
-            VStack(spacing: 20) {
-                HStack(spacing: 25) {
-                    StatBox(title: "Points", value: points, isSelected: selectedStat == "Points")
-                        .onTapGesture { selectedStat = "Points" }
-                    StatBox(title: "Shots", value: shots, isSelected: selectedStat == "Shots")
-                        .onTapGesture { selectedStat = "Shots" }
-                }
-                
-                HStack(spacing: 25) {
-                    StatBox(title: "REB", value: rebounds, isSelected: selectedStat == "REB")
-                        .onTapGesture { selectedStat = "REB" }
-                    StatBox(title: "AST", value: assists, isSelected: selectedStat == "AST")
-                        .onTapGesture { selectedStat = "AST" }
-                    StatBox(title: "STL", value: steals, isSelected: selectedStat == "STL")
-                        .onTapGesture { selectedStat = "STL" }
-                }
-                
-                HStack(spacing: 25) {
-                    StatBox(title: "BLK", value: blocks, isSelected: selectedStat == "BLK")
-                        .onTapGesture { selectedStat = "BLK" }
-                    StatBox(title: "FLS", value: fouls, isSelected: selectedStat == "FLS")
-                        .onTapGesture { selectedStat = "FLS" }
+            // Undo button, only visible when there's something to undo if not it will be hidden
+            if !undoStack.isEmpty {
+                Button {
+                    undo()
+                } label: {
+                    Label("Undo", systemImage: "arrow.uturn.backward")
+                        .font(.subheadline)
+                        .foregroundColor(.orange)
                 }
             }
 
-            //save button: writes local state back to the player and fires the callback
+            Spacer()
+
+            // Save
             Button("Save Stats") {
-                player.stats.points = points
-                player.stats.shots = shots
+                // Update the player object with our local @State values
+                player.stats.points   = points
+                player.stats.shots    = shots
                 player.stats.rebounds = rebounds
-                player.stats.assists = assists
-                player.stats.steals = steals
-                player.stats.blocks = blocks
-                player.stats.fouls = fouls
+                player.stats.assists  = assists
+                player.stats.steals   = steals
+                player.stats.blocks   = blocks
+                player.stats.fouls    = fouls
+                // Call the function passed in from the main view
                 onSave(player)
             }
             .font(.headline)
@@ -103,47 +97,55 @@ struct PlayerView: View {
             .background(Color.orange)
             .clipShape(RoundedRectangle(cornerRadius: 14))
             .padding(.horizontal)
-
-            Spacer()
         }
-        .padding()
+        .padding(.top)
     }
 
-    // this asks, Which stat is the user currently looking at, If you've selected "REB", it connects the wheel to the rebounds variable.
-    private func binding(for stat: String) -> Binding<Int> {
-        switch stat {
-        case "Points": return $points
-        case "Shots": return $shots
-        case "REB": return $rebounds
-        case "AST": return $assists
-        case "STL": return $steals
-        case "BLK": return $blocks
-        case "FLS": return $fouls
-        default: return $points
-        }
+    // Save a snapshot, then increment
+    // inout allows this function to modify the variable directly.
+    private func increment(_ stat: inout Int) {
+        undoStack.append((points, shots, rebounds, assists, steals, blocks, fouls))
+        stat += 1
+    }
+
+    // Pop the last snapshot and restore all values
+    private func undo() {
+        // 'guard let' safely checks if the stack has a last item.
+        // If it's empty, it returns and does nothing.
+        guard let last = undoStack.popLast() else { return }
+        // Restore all values from that "snapshot"
+        points   = last.points
+        shots    = last.shots
+        rebounds = last.rebounds
+        assists  = last.assists
+        steals   = last.steals
+        blocks   = last.blocks
+        fouls    = last.fouls
     }
 }
 
-
-// Instead of writing the code for a little square box seven different times, we just just condense it all down into one. we call each stat one by one in one function.
-struct StatBox: View {
+// Tap-to-increment stat card
+struct StatTapBox: View {
     var title: String
     var value: Int
-    var isSelected: Bool // Visual feedback
-    
+    var onTap: () -> Void
+
     var body: some View {
-        VStack {
-            Text("\(value)")
-                .font(.title2)
-                .fontWeight(.bold)
-                .foregroundColor(isSelected ? .blue : .primary)
-            Text(title)
-                .font(.caption)
-                .foregroundColor(isSelected ? .blue : .gray)
+        Button(action: onTap) {
+            VStack(spacing: 6) {
+                Text("\(value)")
+                    .font(.system(size: 36, weight: .bold))
+                    .foregroundColor(.primary)
+                Text(title)
+                    .font(.caption)
+                    .foregroundColor(.gray)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 20)
+            .background(Color(.systemGray6))
+            .clipShape(RoundedRectangle(cornerRadius: 14))
         }
-        .frame(width: 60, height: 60)
-        .background(isSelected ? Color.blue.opacity(0.1) : Color.clear)
-        .cornerRadius(10)
+        .buttonStyle(.plain) // Prevents the button from looking like a blue link
     }
 }
 
@@ -158,5 +160,5 @@ struct StatBox: View {
         blocks: 1,
         fouls: 3,
         fieldGoalPercentage: 0.53
-    )), onSave: { _ in }) // MARK: - Dummy closure for preview
+    )), onSave: { _ in })
 }

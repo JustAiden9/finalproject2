@@ -12,6 +12,8 @@ struct MainView: View {
     @State private var showingAddPlayer = false
     @State private var showingExport    = false
     @State private var showingSettings  = false
+    @State private var showingHelp  = false
+
     
     var body: some View {
         NavigationStack {
@@ -63,9 +65,9 @@ struct MainView: View {
                 // Navbar pinned to bottom
                 NavbarView(
                      onAddTapped:      { showingAddPlayer = true },
-                     onStatsTapped:    { /* already on MainView, nothing to do */ },
-                     onExportTapped:   { showingExport    = true },
-                     onSettingsTapped: { showingSettings  = true }
+                     onStatsTapped:    { showingHelp = true },
+                     onExportTapped:   { showingExport = true },
+                     onSettingsTapped: { showingSettings = true }
                  )
              }
             
@@ -82,6 +84,9 @@ struct MainView: View {
              }
              .sheet(isPresented: $showingSettings) {
                  SettingsView()
+             }
+             .sheet(isPresented: $showingHelp) {
+                 HelpView()
              }
             // Also save when the player count changes
              .onChange(of: players.count) { _, _ in
