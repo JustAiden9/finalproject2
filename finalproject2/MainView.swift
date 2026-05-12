@@ -80,7 +80,7 @@ struct MainView: View {
                  }
              }
              .sheet(isPresented: $showingExport) {
-                 ExportView()
+                 ExportView(players: players)
              }
              .sheet(isPresented: $showingSettings) {
                  SettingsView()
